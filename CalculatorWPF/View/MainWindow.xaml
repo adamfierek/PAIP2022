@@ -3,9 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:CalculatorWPF"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="800" Width="400" ResizeMode="NoResize" WindowStyle="None">
+        mc:Ignorable="d" DataContext="{Binding MainWindowVM, Source={StaticResource Locator}}"
+        Title="MainWindow" Height="800" Width="400" ResizeMode="NoResize" WindowStyle="None" WindowStartupLocation="CenterScreen">
     <Border BorderThickness="2" BorderBrush="White" CornerRadius="5">
         <Grid Background="DarkBlue">
             <Grid.RowDefinitions>
@@ -14,7 +13,7 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Grid Background="#55000000" Grid.Row="0" PreviewMouseDown="Grid_PreviewMouseDown"/>
-            <Button VerticalAlignment="Top" HorizontalAlignment="Right" Foreground="White" Background="Red" Height="20" Width="20" Margin="5,5,5,5">
+            <Button VerticalAlignment="Top" Command="{Binding Exit}" HorizontalAlignment="Right" Foreground="White" Background="Red" Height="20" Width="20" Margin="5,5,5,5">
                 <TextBlock Text="x" Margin="0,0,0,3" VerticalAlignment="Center"/>
             </Button>
             <Border BorderBrush="#55000000" Background="#70FFFF00" BorderThickness="3" CornerRadius="8" Margin="5" Grid.Row="1">
@@ -24,11 +23,11 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <TextBlock FontFamily="Consolas" 
-                               Text="1+1" 
+                               Text="{Binding EquationValue}" 
                                Margin="10"
                                FontSize="32"/>
                     <TextBlock FontFamily="Consolas" 
-                               Text="2"
+                               Text="{Binding ResultValue}"
                                TextAlignment="Right"
                                Grid.Row="1" 
                                Margin="10"
@@ -46,24 +45,24 @@
                         <Setter Property="MaxHeight" Value="100"/>
                     </Style>
                 </UniformGrid.Resources>
-                <Button Content="7"/>
-                <Button Content="8"/>
-                <Button Content="9"/>
-                <Button Content="+"/>
-                <Button Content="4"/>
-                <Button Content="5"/>
-                <Button Content="6"/>
-                <Button Content="-"/>
-                <Button Content="1"/>
-                <Button Content="2"/>
-                <Button Content="3"/>
-                <Button Content="/"/>
-                <Button Content="0"/>
-                <Button Content="("/>
-                <Button Content=")"/>
-                <Button Content="*"/>
-                <Button Content="C"/>
-                <Button Content="="/>
+                <Button Content="7" Command="{Binding TypeNumber}" CommandParameter="7"/>
+                <Button Content="8" Command="{Binding TypeNumber}" CommandParameter="8"/>
+                <Button Content="9" Command="{Binding TypeNumber}" CommandParameter="9"/>
+                <Button Content="+" Command="{Binding TypeOperation}" CommandParameter="+"/>
+                <Button Content="4" Command="{Binding TypeNumber}" CommandParameter="4"/>
+                <Button Content="5" Command="{Binding TypeNumber}" CommandParameter="5"/>
+                <Button Content="6" Command="{Binding TypeNumber}" CommandParameter="6"/>
+                <Button Content="-" Command="{Binding TypeOperation}" CommandParameter="-"/>
+                <Button Content="1" Command="{Binding TypeNumber}" CommandParameter="1"/>
+                <Button Content="2" Command="{Binding TypeNumber}" CommandParameter="2"/>
+                <Button Content="3" Command="{Binding TypeNumber}" CommandParameter="3"/>
+                <Button Content="/" Command="{Binding TypeOperation}" CommandParameter="/"/>
+                <Button Content="0" Command="{Binding TypeNumber}" CommandParameter="0"/>
+                <Button Content="(" Command="{Binding TypeNumber}" CommandParameter="("/>
+                <Button Content=")" Command="{Binding TypeNumber}" CommandParameter=")"/>
+                <Button Content="*" Command="{Binding TypeOperation}" CommandParameter="*"/>
+                <Button Content="C" Command="{Binding TypeCancel}"/>
+                <Button Content="=" Command="{Binding TypeEquals}"/>
             </UniformGrid>
         </Grid>
     </Border>
