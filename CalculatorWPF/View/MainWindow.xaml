@@ -36,7 +36,7 @@
             </Border>
             <UniformGrid Columns="4" Grid.Row="2" Margin="5">
                 <UniformGrid.Resources>
-                    <Style TargetType="{x:Type Button}">
+                    <Style TargetType="{x:Type ContentControl}">
                         <Setter Property="Margin" Value="5"/>
                         <Setter Property="FontSize" Value="32"/>
                         <Setter Property="Background" Value="Gray"/>
@@ -44,6 +44,8 @@
                         <Setter Property="BorderThickness" Value="2"/>
                         <Setter Property="MaxHeight" Value="100"/>
                     </Style>
+                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type ContentControl}}"/>
+                    <Style TargetType="{x:Type RepeatButton}" BasedOn="{StaticResource {x:Type ContentControl}}"/>
                 </UniformGrid.Resources>
                 <Button Content="7" Command="{Binding TypeNumber}" CommandParameter="7"/>
                 <Button Content="8" Command="{Binding TypeNumber}" CommandParameter="8"/>
@@ -61,7 +63,19 @@
                 <Button Content="(" Command="{Binding TypeNumber}" CommandParameter="("/>
                 <Button Content=")" Command="{Binding TypeNumber}" CommandParameter=")"/>
                 <Button Content="*" Command="{Binding TypeOperation}" CommandParameter="*"/>
-                <Button Content="C" Command="{Binding TypeCancel}"/>
+                <RepeatButton Interval="100" Command="{Binding TypeCancel}">
+                    <RepeatButton.Style>
+                        <Style TargetType="{x:Type RepeatButton}" BasedOn="{StaticResource {x:Type RepeatButton}}">
+                            <Setter Property="Content" Value="C"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ResultValue}" Value="">
+                                    <Setter Property="Content" Value="&#8592;"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </RepeatButton.Style>
+                </RepeatButton>
+                <Button Content="," Command="{Binding TypeNumber}" CommandParameter="."/>
                 <Button Content="=" Command="{Binding TypeEquals}"/>
             </UniformGrid>
         </Grid>

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Globalization;
 using System.Windows;
 
 namespace CalculatorWPF.ViewModel
@@ -10,7 +8,7 @@ namespace CalculatorWPF.ViewModel
     public class MainWindowViewModel : ViewModelBase
     {
         private string numberString = "";
-        private List<string> components = new List<string>();
+        private List<string> components = new();
         public string EquationValue => string.Join(null, components) + numberString;
         public string ResultValue { get; set; } = "";
         public Command Exit { get; }
@@ -41,20 +39,118 @@ namespace CalculatorWPF.ViewModel
 
         private string GetResult()
         {
-            //TODO: implement ONP equation solver
-            return "xDD";
+            var operatorList = new List<string>() { "+", "-", "*", "/" };
+            var componentsOnp = new List<string>();
+            var stack = new Stack<string>();
+
+            foreach (var c in components)
+            {
+                if (!operatorList.Contains(c))
+                {
+                    componentsOnp.Add(c);
+                    continue;
+                }
+                else if (c == "(")
+                {
+                    stack.Push(c);
+                    continue;
+                }
+                else if (c == ")")
+                {
+                    while (stack.Count > 0)
+                    {
+                        var op = stack.Pop();
+                        if (op == "(") break;
+                        componentsOnp.Add(op);
+                    }
+                }
+                else
+                {
+                    var stack_pr = -1;
+                    var c_pr = c is "+" or "-" or "(" ? 0 : 1;
+
+                    if (stack.Count != 0)
+                    {
+                        var s = stack.Peek();
+                        stack_pr = s is "+" or "-" or "(" ? 0 : 1;
+                    }
+
+                    if (c_pr <= stack_pr)
+                    {
+                        while (stack.Count > 0)
+                        {
+                            var s = stack.Peek();
+                            stack_pr = s is "+" or "-" or "(" ? 0 : 1;
+                            if (stack_pr >= c_pr)
+                            {
+                                if (s is not "(" and not ")")
+                                {
+                                    componentsOnp.Add(stack.Pop());
+                                }
+                                else break;
+                            }
+                            else break;
+                        }
+                    }
+                    stack.Push(c);
+                }
+            }
+
+            while (stack.Count > 0)
+            {
+                componentsOnp.Add(stack.Pop());
+            }
+
+            stack.Clear();
+
+            foreach (var c in componentsOnp)
+            {
+                if (!operatorList.Contains(c))
+                {
+                    stack.Push(c);
+                    continue;
+                }
+
+                var a = Convert.ToDouble(stack.Pop(), CultureInfo.InvariantCulture);
+                var b = Convert.ToDouble(stack.Pop(), CultureInfo.InvariantCulture);
+
+                var result = c switch
+                {
+                    "+" => b + a,
+                    "-" => b - a,
+                    "*" => b * a,
+                    "/" => b / a,
+                    _ => 0
+                };
+
+                stack.Push(result.ToString());
+            }
+
+            return stack.Pop();
         }
 
         private void _TypeOperation(string obj)
         {
+            if (ResultValue != "")
+            {
+                components.Clear();
+                ResultValue = "";
+                RaisePropertyChanged(nameof(ResultValue));
+            }
+
+            if (numberString == "" && components.Count == 0 && obj == "-")
+            {
+                _TypeNumber(obj);
+                return;
+            }
+
             if (numberString != "")
             {
                 components.Add(numberString);
                 numberString = "";
+                components.Add(obj);
+                RaisePropertyChanged(nameof(EquationValue));
             }
-
-            components.Add(obj);
-            RaisePropertyChanged(nameof(EquationValue));
         }
 
         private void _TypeCancel()
@@ -66,7 +162,7 @@ namespace CalculatorWPF.ViewModel
             }
             else if (numberString != "")
             {
-                numberString = numberString.Substring(0, numberString.Length - 1);
+                numberString = numberString[0..^1];
             }
             else if (components.Count > 0)
             {
@@ -79,6 +175,12 @@ namespace CalculatorWPF.ViewModel
 
         private void _TypeNumber(string obj)
         {
+            if (ResultValue != "")
+            {
+                components.Clear();
+                ResultValue = "";
+                RaisePropertyChanged(nameof(ResultValue));
+            }
             numberString += obj;
             RaisePropertyChanged(nameof(EquationValue));
         }
