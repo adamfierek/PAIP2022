@@ -58,8 +58,6 @@
                                 <ColumnDefinition/>
                                 <ColumnDefinition Width="2*"/>
                             </Grid.ColumnDefinitions>
-                            <Image VerticalAlignment="Center" Source="{Binding Image}" Margin="5" RenderOptions.BitmapScalingMode="HighQuality"/>
-                            <Button Content="..." VerticalAlignment="Bottom" Height="30" Width="80" Margin="0,0,0,10"/>
                             <Grid Height="200" Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="38"/>

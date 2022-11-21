@@ -13,8 +13,7 @@ namespace DataTemplateTest.Services
                 {
                     FirstName = "Jan",
                     LastName = "Kowalski",
-                    PhoneNr = "+48500400200",
-                    Image = @"C:\Users\AdamFierek\Pictures\test.bmp"
+                    PhoneNr = "+48500400200"
                 }
             };
         }

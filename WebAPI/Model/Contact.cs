@@ -1,4 +1,4 @@
-﻿namespace DataTemplateTest.Model
+﻿namespace WebAPI.Model
 {
     public class Contact
     {
