@@ -1,7 +1,11 @@
 ﻿using DataTemplateTest.Model;
 using DataTemplateTest.Services;
-using DataTemplateTest.ViewModel;
+using Mvvm;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace DataTemplateTest
@@ -19,16 +23,55 @@ namespace DataTemplateTest
             }
         }
         private ContactService service;
+
+        public Command Refresh { get; }
+        public Command NewContact { get; }
+        public Command RemoveContact { get; }
+        public Command SaveContact { get; }
+
         private Contact selectedContact;
 
         public MainWindowViewModel()
         {
             service = new ContactService();
-            var contacts = service.GetAll();
-            foreach (var c in contacts)
+            Refresh = new Command(Init);
+            NewContact = new Command(AddContact);
+            RemoveContact = new Command(_RemoveContact);
+            SaveContact = new Command(_SaveContactAsync);
+
+            Task.Run(Init);
+        }
+
+        private async void _SaveContactAsync()
+        {
+            if (selectedContact.ContactId == 0)
             {
-                ContactList.Add(c);
+                await service.Add(selectedContact);
             }
+            else
+            {
+                await service.Update(selectedContact);
+            }
+
+            Init();
+        }
+
+        private async void _RemoveContact()
+        {
+            await service.Delete(selectedContact.ContactId);
+            Init();
+        }
+
+        private void AddContact()
+        {
+            ContactList.Add(new Contact { FirstName = "(new contact)" });
+        }
+
+        private async void Init()
+        {
+            var result = await service.GetAll();
+            ContactList = new ObservableCollection<Contact>(result);
+            RaisePropertyChanged(nameof(ContactList));
         }
     }
 }

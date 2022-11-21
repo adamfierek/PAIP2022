@@ -36,5 +36,27 @@ namespace WebAPI.Controllers
             var result = dbContext.Contacts.ToList();
             return Ok(result);
         }
+
+        [HttpPut("{id:int}")]
+        public IActionResult UpdateContact(int id, Contact contact)
+        {
+            //wyszukiwanie LINQ
+            var c = dbContext.Contacts.FirstOrDefault(c => c.ContactId == id);
+            c.FirstName = contact.FirstName;
+            c.LastName = contact.LastName;
+            c.PhoneNr = contact.PhoneNr;
+            dbContext.SaveChanges();
+            return Ok();
+        }
+
+        [HttpDelete("{id:int}")]
+        public IActionResult DeleteContact(int id)
+        {
+            //wyszukiwanie EFCore
+            var c = dbContext.Contacts.Find(id);
+            dbContext.Contacts.Remove(c);
+            dbContext.SaveChanges();
+            return NoContent();
+        }
     }
 }

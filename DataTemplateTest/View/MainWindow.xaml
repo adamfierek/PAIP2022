@@ -67,7 +67,7 @@
                                     <TextBox Width="150" Text="{Binding FirstName}" FontSize="26"/>
                                     <TextBox Width="150" Text="{Binding LastName}" FontSize="26" Margin="5,0,0,0"/>
                                 </StackPanel>
-                                <TextBox Text="{Binding PhoneNr}" VerticalAlignment="Center" Grid.Row="1" HorizontalAlignment="Center"/>
+                                <TextBox Text="{Binding PhoneNr}" Width="200" VerticalAlignment="Center" Grid.Row="1" HorizontalAlignment="Center"/>
                             </Grid>
                         </Grid>
                     </Border>
@@ -78,8 +78,9 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <DockPanel>
-                <Button Width="80" Margin="10" HorizontalAlignment="Left" DockPanel.Dock="Left" Content="New.."/>
-                <Button Width="80" Margin="10" HorizontalAlignment="Right" DockPanel.Dock="Right" Content="Save">
+                <Button Width="80" Margin="10" HorizontalAlignment="Left" DockPanel.Dock="Left" Content="Refresh" Command="{Binding Refresh}"/>
+                <Button Width="80" Margin="10" HorizontalAlignment="Left" DockPanel.Dock="Left" Content="New.." Command="{Binding NewContact}"/>
+                <Button Width="80" Margin="10" HorizontalAlignment="Right" DockPanel.Dock="Right" Content="Save" Command="{Binding SaveContact}">
                     <Button.Style>
                         <Style TargetType="{x:Type Button}">
                             <Setter Property="Visibility" Value="Visible"/>
@@ -91,7 +92,7 @@
                         </Style>
                     </Button.Style>
                 </Button>
-                <Button Width="80" Margin="10" HorizontalAlignment="Right" DockPanel.Dock="Right" Content="Delete" Foreground="Red">
+                <Button Width="80" Margin="10" HorizontalAlignment="Right" DockPanel.Dock="Right" Content="Delete" Foreground="Red" Command="{Binding RemoveContact}">
                     <Button.Style>
                         <Style TargetType="{x:Type Button}">
                             <Setter Property="Visibility" Value="Visible"/>
